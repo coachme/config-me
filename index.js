@@ -12,21 +12,23 @@
  */
 var basename = require('path').basename
 var fs = require('fs')
-var currentEnvironment = process.env.ENV_VARIABLE || 'development'
-var config = {
+var currentEnvironment = process.env.NODE_ENV || 'development'
+
+module.exports = {
   settings: {},
 
   // Read all the files from path and add any configuration objects to the config object
   init: function(path) {
-    if (typeof path !== 'string') throw new Error('Config-Me init function requires a string as first argument')
+    if (typeof path !== 'string')
+      throw new Error('Config-Me init function requires a string as first argument')
 
     fs.readdirSync(path).forEach(function(filename) {
       if (!/\.js$/.test(filename)) return false
 
       var name = basename(filename, '.js')
-      config.settings[name] = require([path, '/', filename].join(''))
-    })
-    
+      this.settings[name] = require(path + '/' + filename)
+    }, this)
+
     return this
   },
 
@@ -43,7 +45,7 @@ var config = {
   },
 
   set: function(setting, val) {
-    this.settings[setting] = val;
+    this.settings[setting] = val
     return this
   },
 
@@ -52,4 +54,3 @@ var config = {
   }
 }
 
-module.exports = config
