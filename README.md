@@ -22,9 +22,9 @@ module.exports = {
   port: 5432
 }
 
-//your_app_root/index.js
+// your_app_root/index.js
 
-var config = require('config-me').init(__dirname + '/config');
+var config = require('config-me').loadDir(__dirname + '/config');
 var dbConfig = config.get('db');
 var dbPort = dbConfig.port; // 5432
 

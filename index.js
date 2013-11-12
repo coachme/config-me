@@ -17,10 +17,10 @@ var currentEnvironment = process.env.NODE_ENV || 'development'
 module.exports = {
   settings: {},
 
-  // Read all the files from path and add any configuration objects to the config object
-  init: function(path) {
+  // Read all the files from path and add any configuration files to the config object
+  loadDir: function(path) {
     if (typeof path !== 'string')
-      throw new Error('Config-Me init function requires a string as first argument')
+      throw new Error('Config-Me loadDir function requires a string as first argument')
 
     fs.readdirSync(path).forEach(function(filename) {
       if (!/\.js$/.test(filename)) return false

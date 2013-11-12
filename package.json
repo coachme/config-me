@@ -1,6 +1,6 @@
 {
   "name": "config-me",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Very basic configuration module based on Express",
   "keywords": ["configuration", "config"],
   "bugs": {
