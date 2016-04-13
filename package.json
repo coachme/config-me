@@ -1,7 +1,7 @@
 {
   "name": "config-me",
   "version": "0.2.0",
-  "description": "Very basic configuration module based on Express",
+  "description": "Very basic configuration module",
   "keywords": ["configuration", "config"],
   "bugs": {
     "url": "https://github.com/coachme/config-me/issues"
@@ -11,5 +11,11 @@
     "url": "https://github.com/coachme/config-me.git"
   },
   "os": ["darwin", "linux"],
-  "author": "Ricardo Graça <ricardo@devius.net>"
+  "author": "Ricardo Graça <ricardo@devius.net>",
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  }
 }
