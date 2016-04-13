@@ -87,10 +87,16 @@ describe('ConfigMe', function() {
       assert.strictEqual(configMe.settings.options.test, data.test)
     })
 
-    it('converts filenames with dashes and underscores to came case', function() {
+    it('converts filenames with dashes to camel case', function() {
       var errorMessage = 'Expected the "settings" object to have the "arrayOptions" key'
       configMe.loadDir(settingsPath)
       assert(Object.keys(configMe.settings).indexOf('arrayOptions') > -1, errorMessage)
+    })
+
+    it('converts filenames with underscores to camel case', function() {
+      var errorMessage = 'Expected the "settings" object to have the "envOptions" key'
+      configMe.loadDir(settingsPath)
+      assert(Object.keys(configMe.settings).indexOf('envOptions') > -1, errorMessage)
     })
 
     it('stores array values', function() {
