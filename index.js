@@ -10,23 +10,52 @@
  * @module config-me
  * @author Ricardo Graça <ricardo@devius.net>
  */
-var basename = require('path').basename
+var path = require('path')
 var fs = require('fs')
 var currentEnvironment = process.env.NODE_ENV || 'development'
+
+function camelCase(filename) {
+  var basename = path.basename(filename, '.js')
+
+  return basename.replace(/[-_](\S)/g, function(match, substring) {
+    return substring.toUpperCase()
+  })
+}
+
+function mergeObjects(base, source) {
+  for (var key in source) {
+    base[key] = source
+  }
+}
+
+function load(settings) {
+  var isArray = Array.isArray(settings)
+  var hasCommonSettings = Object.keys(settings).indexOf('common') > -1
+  var hasEnvSettings = Object.keys(settings).indexOf(currentEnvironment) > -1
+  var compositeSettings = {}
+
+  if (isArray || !(hasCommonSettings || hasEnvSettings)) return settings
+  if (hasCommonSettings) mergeObjects(compositeSettings, settings['common'])
+  if (hasEnvSettings) mergeObjects(compositeSettings, settings[currentEnvironment])
+
+  return compositeSettings
+}
 
 module.exports = {
   settings: {},
 
   // Read all the files from path and add any configuration files to the config object
-  loadDir: function(path) {
-    if (typeof path !== 'string')
-      throw new Error('Config-Me loadDir function requires a string as first argument')
+  loadDir: function(targetPath) {
+    if (typeof targetPath !== 'string')
+      throw new TypeError('ConfigMe loadDir function requires a string as first argument')
 
-    fs.readdirSync(path).forEach(function(filename) {
+    fs.readdirSync(targetPath).forEach(function(filename) {
       if (!/\.js$/.test(filename)) return false
 
-      var name = basename(filename, '.js')
-      this.settings[name] = require(path + '/' + filename)
+      var name = camelCase(filename)
+      var filePath = path.join(targetPath, filename)
+      var settings = require(filePath)
+      this.settings[name] = load(settings)
     }, this)
 
     return this
@@ -46,11 +75,9 @@ module.exports = {
 
   set: function(setting, val) {
     this.settings[setting] = val
-    return this
   },
 
   get: function(setting) {
     return this.settings[setting]
   }
 }
-
