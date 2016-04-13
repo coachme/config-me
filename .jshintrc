@@ -1,0 +1,21 @@
+{
+  "asi": true,
+  "boss": true,
+  "eqeqeq": true,
+  "freeze": true,
+  "globals": {
+    "after": false,
+    "afterEach": false,
+    "before": false,
+    "beforeEach": false,
+    "describe": false,
+    "it": false
+  },
+  "latedef": true,
+  "maxparams": 4,
+  "noarg": true,
+  "node": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true
+}
