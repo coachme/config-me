@@ -3,6 +3,11 @@ var configMe = require('../index')
 var path = require('path')
 var util = require('util')
 
+function reload() {
+  delete require.cache[require.resolve('../index')]
+  configMe = require('../index')
+}
+
 describe('ConfigMe', function() {
   beforeEach(function() {
     configMe.settings = {}
@@ -70,7 +75,6 @@ describe('ConfigMe', function() {
     })
 
     it('loads .js files that are present in the target directory', function() {
-      var data = require('./data/options')
       configMe.loadDir(settingsPath)
       assert(Object.keys(configMe.settings).length > 0, 'Expected the "settings" object to have at least one key')
     })
@@ -84,7 +88,7 @@ describe('ConfigMe', function() {
     it('stores the settings values found in files', function() {
       var data = require('./data/options')
       configMe.loadDir(settingsPath)
-      assert.strictEqual(configMe.settings.options.test, data.test)
+      assert.strictEqual(configMe.settings.options.option, data.option)
     })
 
     it('converts filenames with dashes to camel case', function() {
@@ -103,6 +107,44 @@ describe('ConfigMe', function() {
       configMe.loadDir(settingsPath)
       assert(Array.isArray(configMe.settings.arrayOptions), 'Expected the "arrayOptions" key to be an array')
       assert(configMe.settings.arrayOptions.length > 0, 'Expected the array to contain some values')
+    })
+
+    it('loads the correct set of settings for the current environment', function() {
+      var noRootMessage = 'Expected the "settings" object to have the "envOptions" key'
+      var errorMessage = 'Expected the "envOption" key to be present'
+      var unexpectedKeyMessage = 'Expected the "unique" key to not be present in the settings object'
+      process.env.NODE_ENV = 'test-env'
+
+      reload()
+      configMe.loadDir(settingsPath)
+
+      assert(Object.keys(configMe.settings).indexOf('envOptions') > -1, noRootMessage)
+      assert(Object.keys(configMe.settings.envOptions).indexOf('envOption') > -1, errorMessage)
+      assert(Object.keys(configMe.settings.envOptions).indexOf('unique') === -1, unexpectedKeyMessage)
+    })
+
+    it('loads settings present in the "common" section of files', function() {
+      var errorMessage = 'Expected the "shared" key to be present'
+      process.env.NODE_ENV = 'test'
+
+      reload()
+      configMe.loadDir(settingsPath)
+
+      assert(Object.keys(configMe.settings.envOptions).indexOf('shared') > -1, errorMessage)
+    })
+
+    it('overrides common settings with more specific environment settings', function() {
+      var envOptions = require('./data/env_options')
+      var errorMessage = 'Expected the "common.option" setting to have been overrided'
+
+      configMe.loadDir(settingsPath)
+      assert.notStrictEqual(configMe.settings.envOptions.option, envOptions.common.option, errorMessage)
+    })
+
+    it('loads settings from the environment matching key even without a "common" section', function() {
+      var errorMessage = 'Expected the "shared" key to be present'
+      configMe.loadDir(settingsPath)
+      assert(Object.keys(configMe.settings.envOptions).indexOf('option') > -1, errorMessage)
     })
   })
 })
