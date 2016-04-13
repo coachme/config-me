@@ -1,3 +1,3 @@
 module.exports = {
-  test: "a test value"
+  option: "a test value"
 }
