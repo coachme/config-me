@@ -7,8 +7,8 @@
  * It doesn't enforce a configuration format for the files, but it's expected that these are objects or arrays. Base
  * properties can be retrieved with the get method and changed with the set method.
  *
- * @module config-me
  * @author Ricardo Graça <ricardo@devius.net>
+ * @copyright MeApps Corporation, 2013
  */
 var path = require('path')
 var fs = require('fs')
@@ -35,7 +35,7 @@ function load(settings) {
   var compositeSettings = {}
 
   if (isArray || !(hasCommonSettings || hasEnvSettings)) return settings
-  if (hasCommonSettings) mergeObjects(compositeSettings, settings['common'])
+  if (hasCommonSettings) mergeObjects(compositeSettings, settings.common)
   if (hasEnvSettings) mergeObjects(compositeSettings, settings[currentEnvironment])
 
   return compositeSettings
@@ -57,18 +57,6 @@ module.exports = {
       var settings = require(filePath)
       this.settings[name] = load(settings)
     }, this)
-
-    return this
-  },
-
-  configure: function(env, fn) {
-    var envs = 'all'
-    var args = [].slice.call(arguments) // Convert the arguments variable into a true array
-
-    fn = args.pop()
-
-    if (args.length) envs = args
-    if (envs === 'all' || ~envs.indexOf(currentEnvironment)) fn.call(this)
 
     return this
   },
