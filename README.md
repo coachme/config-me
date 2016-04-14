@@ -89,3 +89,9 @@ Settings in a specific environment will override those defined in the "common" s
 This is inspired by the simple `set` and `get` methods of Express, but the similarities end there. There are some
 additional features like the ability to read configuration files from a directory. It can read a configuration
 directory, load all .js files in there and attach the objects found to the main configuration object.
+
+## Old config-me npm module
+
+If you are looking for version 0.1.0 of config-me that was previously published on npm you can find more info
+[in this wiki page](https://github.com/coachme/config-me/wiki/Old-config-me-module). The current version of this module
+is not compatible in any way with version 0.1.0.
