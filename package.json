@@ -1,8 +1,11 @@
 {
   "name": "config-me",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Very basic configuration module",
-  "keywords": ["configuration", "config"],
+  "keywords": [
+    "configuration",
+    "config"
+  ],
   "bugs": {
     "url": "https://github.com/coachme/config-me/issues"
   },
@@ -10,7 +13,10 @@
     "type": "git",
     "url": "https://github.com/coachme/config-me.git"
   },
-  "os": ["darwin", "linux"],
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "author": "Ricardo Graça <ricardo@devius.net>",
   "devDependencies": {
     "mocha": "*"
