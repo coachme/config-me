@@ -109,7 +109,7 @@ describe('ConfigMe', function() {
       assert(configMe.settings.arrayOptions.length > 0, 'Expected the array to contain some values')
     })
 
-    it('loads the correct set of settings for the current environment', function() {
+    it('sets the correct setting keys for the current environment', function() {
       var noRootMessage = 'Expected the "settings" object to have the "envOptions" key'
       var errorMessage = 'Expected the "envOption" key to be present'
       var unexpectedKeyMessage = 'Expected the "unique" key to not be present in the settings object'
@@ -123,7 +123,17 @@ describe('ConfigMe', function() {
       assert(Object.keys(configMe.settings.envOptions).indexOf('unique') === -1, unexpectedKeyMessage)
     })
 
+    it('stores the correct setting values for the current environment', function() {
+      var data = require('./data/env_options')
+
+      configMe.loadDir(settingsPath)
+
+      assert.strictEqual(configMe.settings.envOptions.shared, data.common.shared)
+      assert.strictEqual(configMe.settings.envOptions.envOption, data[process.env.NODE_ENV].envOption)
+    })
+
     it('loads settings present in the "common" section of files', function() {
+      var data = require('./data/env_options')
       var errorMessage = 'Expected the "shared" key to be present'
       process.env.NODE_ENV = 'test'
 
@@ -131,6 +141,7 @@ describe('ConfigMe', function() {
       configMe.loadDir(settingsPath)
 
       assert(Object.keys(configMe.settings.envOptions).indexOf('shared') > -1, errorMessage)
+      assert.strictEqual(configMe.settings.envOptions.shared, data.common.shared)
     })
 
     it('overrides common settings with more specific environment settings', function() {
