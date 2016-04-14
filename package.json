@@ -1,6 +1,6 @@
 {
   "name": "config-me",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Very basic configuration module",
   "keywords": [
     "configuration",
