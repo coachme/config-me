@@ -66,11 +66,16 @@ module.exports = {
   common: {
     user: 'dbUser',
     password: 'safePassword',
-    host: 'localhost',
-    port: 5432
+    connection: {
+      host: 'localhost',
+      port: 5432
+    }
   },
   test: {
     database: 'test_db',
+    connection: {
+      host: '192.168.1.10'
+    }
   },
   development: {
     database: 'dev_db',
@@ -80,9 +85,13 @@ module.exports = {
 // your_app_root/index.js
 var config = require('config-me').loadDir(__dirname + '/config');
 var dbConfig = config.get('db');
-var dbPort = dbConfig.database; // test_db
+var dbName = dbConfig.database; // test_db
+var dbHost = dbConfig.connection.host; // 192.168.1.10
+var dbPort = dbConfig.connection.port; // 5432
 ```
-Settings in a specific environment will override those defined in the "common" section.
+Settings in a specific environment will override those defined in the "common" section. It's even possible to override
+only some settings inside deep setting trees and the rest of the defaults from the common section will still be
+accessible.
 
 ## About
 
