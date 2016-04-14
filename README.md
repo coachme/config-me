@@ -2,6 +2,8 @@ Config-Me
 =========
 Simple configuration module for node.js
 
+[![Build Status](https://travis-ci.org/coachme/config-me.svg?branch=master)](https://travis-ci.org/coachme/config-me)
+
 ## Objectives
 
 The main objective of this project is to be extremely simple. It will never have as many functionalities as other
