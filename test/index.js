@@ -54,6 +54,7 @@ describe('ConfigMe', function() {
   })
 
   describe('.loadDir()', function() {
+    var envOptions = require('./data/env_options')
     var settingsPath = path.join(__dirname, 'data')
 
     it('throws an error if argument is not a string', function() {
@@ -124,16 +125,12 @@ describe('ConfigMe', function() {
     })
 
     it('stores the correct setting values for the current environment', function() {
-      var data = require('./data/env_options')
-
       configMe.loadDir(settingsPath)
-
-      assert.strictEqual(configMe.settings.envOptions.shared, data.common.shared)
-      assert.strictEqual(configMe.settings.envOptions.envOption, data[process.env.NODE_ENV].envOption)
+      assert.strictEqual(configMe.settings.envOptions.shared, envOptions.common.shared)
+      assert.strictEqual(configMe.settings.envOptions.envOption, envOptions[process.env.NODE_ENV].envOption)
     })
 
     it('loads settings present in the "common" section of files', function() {
-      var data = require('./data/env_options')
       var errorMessage = 'Expected the "shared" key to be present'
       process.env.NODE_ENV = 'test'
 
@@ -141,15 +138,38 @@ describe('ConfigMe', function() {
       configMe.loadDir(settingsPath)
 
       assert(Object.keys(configMe.settings.envOptions).indexOf('shared') > -1, errorMessage)
-      assert.strictEqual(configMe.settings.envOptions.shared, data.common.shared)
+      assert.strictEqual(configMe.settings.envOptions.shared, envOptions.common.shared)
     })
 
     it('overrides common settings with more specific environment settings', function() {
-      var envOptions = require('./data/env_options')
       var errorMessage = 'Expected the "common.option" setting to have been overrided'
-
       configMe.loadDir(settingsPath)
       assert.notStrictEqual(configMe.settings.envOptions.option, envOptions.common.option, errorMessage)
+    })
+
+    it('maintains common keys that don\'t exist in an environment when the values are objects', function() {
+      var errorMessage = 'Expected the "testing" key to be present'
+      configMe.loadDir(settingsPath)
+      assert(Object.keys(configMe.settings.envOptions.deep).indexOf('testing') > -1, errorMessage)
+    })
+
+    it('overrides common keys with more specific environment settings when values are objects', function() {
+      var originalValue = envOptions.common.deep.something
+      var errorMessage = 'Expected the "common.deep.something" setting to have been overrided'
+
+      configMe.loadDir(settingsPath)
+
+      assert.notStrictEqual(configMe.settings.envOptions.deep.something, originalValue, errorMessage)
+    })
+
+    it('overrides an object value inside a common key with a different type value', function() {
+      var originalValue = envOptions.common.deep.extra
+      var errorMessage = 'Expected the "common.deep.extra" setting to have been overrided'
+
+      configMe.loadDir(settingsPath)
+
+      assert.strictEqual(typeof originalValue, 'object')
+      assert.notStrictEqual(configMe.settings.envOptions.deep.extra, originalValue, errorMessage)
     })
 
     it('loads settings from the environment matching key even without a "common" section', function() {

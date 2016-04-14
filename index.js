@@ -24,7 +24,13 @@ function camelCase(filename) {
 
 function mergeObjects(base, source) {
   for (var key in source) {
-    base[key] = source[key]
+    if (source[key] && typeof source[key] === 'object') {
+      if (!base[key]) base[key] = {}
+      mergeObjects(base[key], source[key])
+    }
+    else {
+      base[key] = source[key]
+    }
   }
 }
 
