@@ -153,6 +153,12 @@ describe('ConfigMe', function() {
       assert(Object.keys(configMe.settings.envOptions.deep).indexOf('testing') > -1, errorMessage)
     })
 
+    it('keeps arrays intact when they appear inside objects', function() {
+      var errorMessage = 'Expected the "deep.things" value to be an array'
+      configMe.loadDir(settingsPath)
+      assert(Array.isArray(configMe.settings.envOptions.deep.things), errorMessage)
+    })
+
     it('overrides common keys with more specific environment settings when values are objects', function() {
       var originalValue = envOptions.common.deep.something
       var errorMessage = 'Expected the "common.deep.something" setting to have been overrided'

@@ -5,6 +5,7 @@ module.exports = {
     deep: {
       something: 66,
       testing: 'this is a value',
+      things: [5, 6, 7, 8],
       extra: {
         foo: 'bar'
       }
