@@ -219,5 +219,10 @@ describe('ConfigMe', function() {
       assert(configMe.settings.multipleSettings.indexOf('value1') > -1, util.format(errorMessage, 'value1'))
       assert(configMe.settings.multipleSettings.indexOf('value2') > -1, util.format(errorMessage, 'value2'))
     })
+
+    it('accepts multiple arguments at once', function() {
+      configMe.push('multipleSettings', 'value1', 'value2')
+      assert.strictEqual(configMe.settings.multipleSettings.length, 2)
+    })
   })
 })

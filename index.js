@@ -14,6 +14,16 @@ var path = require('path')
 var fs = require('fs')
 var currentEnvironment = process.env.NODE_ENV || 'development'
 
+function toArray(values) {
+  var args = new Array(values.length)
+
+  for (var i = 0; i < args.length; ++i) {
+    args[i] = values[i]
+  }
+
+  return args
+}
+
 function camelCase(filename) {
   var basename = path.basename(filename, '.js')
 
@@ -67,9 +77,9 @@ module.exports = {
     return this
   },
 
-  push: function(setting, value) {
+  push: function(setting) {
     if (!Array.isArray(this.settings[setting])) this.settings[setting] = []
-    this.settings[setting].push(value)
+    this.settings[setting] = this.settings[setting].concat(toArray(arguments).slice(1))
   },
 
   set: function(setting, val) {
