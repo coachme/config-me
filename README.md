@@ -44,17 +44,23 @@ method.
 
 ### .push(name, value)
 
-Pushes `value` to an array identified by `name`. This method can be called multiple times and each value is pushed to
-the same setting key. Calling `.get()` on a key created this way will return an array.
+Pushes `value` to an array identified by `name`. This method can be called multiple times and each value is added to
+the same setting key without overriding any of the previous values. It can also be called with more than one value to
+add multiple values at once. Calling `.get()` on a key created this way will return an array.
 
-Example:
+Examples:
 
 ```js
 var config = require('config-me');
 
 config.push('setting', 'on');
 config.push('setting', 'off');
+
 config.get('setting'); // ['on', 'off']
+
+config.push('setting', 'one', 'two');
+
+config.get('setting'); // ['on', 'off', 'one', 'two']
 ```
 
 ### .loadDir(path)
