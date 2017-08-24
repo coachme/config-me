@@ -184,4 +184,40 @@ describe('ConfigMe', function() {
       assert(Object.keys(configMe.settings.envOptions).indexOf('option') > -1, errorMessage)
     })
   })
+
+  describe('.push()', function() {
+    it('creates a new key to store multiple settings if it doesn\'t exist already', function() {
+      var errorMessage = 'Expected the "multipleSettings" key to be present'
+      configMe.push('multipleSettings', 'value')
+      assert(Object.keys(configMe.settings).indexOf('multipleSettings') > -1, errorMessage)
+    })
+
+    it('creates an array to store multiple settings if it doesn\' exist already', function() {
+      var errorMessage = 'Expected the "multipleSettings" value to be an array'
+      configMe.push('multipleSettings', 'value')
+      assert(Array.isArray(configMe.settings.multipleSettings), errorMessage)
+    })
+
+    it('returns an array when recalled with the get method', function() {
+      var errorMessage = 'Expected the "multipleSettings" value to be an array'
+      configMe.push('multipleSettings', 'value')
+      assert(Array.isArray(configMe.get('multipleSettings')), errorMessage)
+    })
+
+    it('pushes multiple values to the same key', function() {
+      configMe.push('multipleSettings', 'value1')
+      configMe.push('multipleSettings', 'value2')
+      assert.strictEqual(configMe.settings.multipleSettings.length, 2)
+    })
+
+    it('stores multiple values in the same key', function() {
+      var errorMessage = 'Expected value %s to be present'
+
+      configMe.push('multipleSettings', 'value1')
+      configMe.push('multipleSettings', 'value2')
+
+      assert(configMe.settings.multipleSettings.indexOf('value1') > -1, util.format(errorMessage, 'value1'))
+      assert(configMe.settings.multipleSettings.indexOf('value2') > -1, util.format(errorMessage, 'value2'))
+    })
+  })
 })

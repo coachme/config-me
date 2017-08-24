@@ -67,6 +67,11 @@ module.exports = {
     return this
   },
 
+  push: function(setting, value) {
+    if (!Array.isArray(this.settings[setting])) this.settings[setting] = []
+    this.settings[setting].push(value)
+  },
+
   set: function(setting, val) {
     this.settings[setting] = val
   },
