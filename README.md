@@ -11,14 +11,59 @@ more complex configuration modules. As part of this philosophy external dependen
 
 ## Usage
 
+### .set(name, value)
+
+Sets the named key to the specified value. Note that calling it multiple times with the same `name` will override
+previously set values. If you want to store multiple values in the same key take a look at the `.push()` method
+explained further down.
+
+Example:
+
 ```js
 var config = require('config-me');
 
 config.set('setting', 'on');
 config.get('setting'); // 'on'
-
 ```
-or
+
+### .get(name)
+
+Gets the value of the key identified by `name`. Returns `undefined` if the key doesn't exist. Example:
+
+```js
+var config = require('config-me');
+
+config.get('setting'); // 'something'
+config.get('anotherSetting'); // 'something else'
+config.get('notSet'); // undefined
+```
+
+Currently there's no support for getting nested values using a dot notation, e.g. `config.get('db.port')`, but this will
+be added in the future. For now base properties can be retrieved with the `get` method and changed with the `set`
+method.
+
+### .push(name, value)
+
+Pushes `value` to an array identified by `name`. This method can be called multiple times and each value is pushed to
+the same setting key. Calling `.get()` on a key created this way will return an array.
+
+Example:
+
+```js
+var config = require('config-me');
+
+config.push('setting', 'on');
+config.push('setting', 'off');
+config.get('setting'); // ['on', 'off']
+```
+
+### .loadDir(path)
+
+Loads settings defined in arbitrary `.js` files located on the specified path. Each file's contents are set to a key
+named the same as the filename. Each file must export either an object or an array but apart from that the format isn't
+very important.
+
+Example:
 
 ```js
 // your_app_root/config/db.js
@@ -36,14 +81,7 @@ var dbConfig = config.get('db');
 var dbPort = dbConfig.port; // 5432
 ```
 
-**Note:** You can use both of these approaches in the same app, but setting a previously set option will override its
-value with the new one.
-
-Currently there's no support for getting nested values using a dot notation, e.g. `config.get('db.port')`, but this will
-be added in the future. For now base properties can be retrieved with the `get` method and changed with the `set`
-method.
-
-### Configuration files
+#### Configuration files
 
 There's no overly strict configuration format for the files, but it's expected that these are javascript modules that
 return objects or arrays when required.
@@ -54,7 +92,7 @@ If there is a key whose name matches the current app's environment name, or a ke
 treated as having environment specific settings and only the values inside the aforementioned key will be added to the
 global settings object. This is explained below.
 
-### Environment specific settings
+#### Environment specific settings
 
 It's possible to have different settings for different environments in the same file, and only the settings relevant to
 the current app's environment will be loaded:
