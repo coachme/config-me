@@ -1,5 +1,6 @@
 var assert = require('assert')
 var configMe = require('../index')
+var fs = require('fs')
 var path = require('path')
 var util = require('util')
 
@@ -73,6 +74,12 @@ describe('ConfigMe', function() {
       assert.throws(badLoad, function(error) {
         return error instanceof Error && error.code === 'ENOENT'
       })
+    })
+
+    it('doesn\'t throw an error if there are any non .js files in the target directory', function() {
+      var badFile = path.join(settingsPath, 'wrong-file.json')
+      assert.doesNotThrow(function() { fs.accessSync(badFile, fs.R_OK) })
+      assert.doesNotThrow(function() { configMe.loadDir(settingsPath) })
     })
 
     it('loads .js files that are present in the target directory', function() {
@@ -182,6 +189,39 @@ describe('ConfigMe', function() {
       var errorMessage = 'Expected the "shared" key to be present'
       configMe.loadDir(settingsPath)
       assert(Object.keys(configMe.settings.envOptions).indexOf('option') > -1, errorMessage)
+    })
+  })
+
+  describe('.loadFile()', function() {
+    var settingsPath = path.join(__dirname, 'data', 'options.js')
+
+    it('throws an error if trying to load a non .js file', function() {
+      var badFile = path.join(settingsPath, '..', 'wrong-file.json')
+      assert.doesNotThrow(function() { fs.accessSync(badFile, fs.R_OK) })
+      assert.throws(function() { configMe.loadFile(badFile) })
+    })
+
+    it('throws an error if argument is not a string', function() {
+      function badLoad() {
+        configMe.loadFile(true)
+      }
+
+      assert.throws(badLoad, /loadFile function requires a string as first argument/)
+    })
+
+    it('throws an error if the path is invalid', function() {
+      function badLoad() {
+        configMe.loadFile('badfile.js')
+      }
+
+      assert.throws(badLoad, function(error) {
+        return error instanceof Error && error.code === 'MODULE_NOT_FOUND'
+      })
+    })
+
+    it('loads the specified .js file', function() {
+      configMe.loadFile(settingsPath)
+      assert(Object.keys(configMe.settings).length > 0, 'Expected the "settings" object to have at least one key')
     })
   })
 
