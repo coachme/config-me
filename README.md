@@ -87,6 +87,29 @@ var dbConfig = config.get('db');
 var dbPort = dbConfig.port; // 5432
 ```
 
+### .loadFile(filePath)
+
+Loads settings defined in the specified `.js` file. The file's contents are set to a key named the same as the filename.
+The file must export either an object or an array but apart from that the format isn't very important.
+
+Example:
+
+```js
+// your_app_root/config/db.js
+module.exports = {
+  user: 'dbUser',
+  password: 'safePassword',
+  database: 'your_app_db',
+  host: 'localhost',
+  port: 5432
+}
+
+// your_app_root/index.js
+var config = require('config-me').loadFile(__dirname + '/config/db.js');
+var dbConfig = config.get('db');
+var dbPort = dbConfig.port; // 5432
+```
+
 #### Configuration files
 
 There's no overly strict configuration format for the files, but it's expected that these are javascript modules that
