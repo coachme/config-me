@@ -67,14 +67,21 @@ module.exports = {
 
     fs.readdirSync(targetPath).forEach(function(filename) {
       if (!/\.js$/.test(filename)) return false
-
-      var name = camelCase(filename)
-      var filePath = path.join(targetPath, filename)
-      var settings = require(filePath)
-      this.settings[name] = load(settings)
+      this.loadFile(path.join(targetPath, filename))
     }, this)
 
     return this
+  },
+
+  loadFile: function loadFile(targetPath) {
+    if (typeof targetPath !== 'string')
+      throw new TypeError('loadFile function requires a string as first argument')
+    if (!/\.js$/.test(targetPath))
+      throw new Error('loadFile can only load .js files')
+
+    var name = camelCase(targetPath)
+    var settings = require(targetPath)
+    this.settings[name] = load(settings)
   },
 
   push: function(setting) {
