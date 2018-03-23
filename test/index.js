@@ -78,7 +78,7 @@ describe('ConfigMe', function() {
 
     it('doesn\'t throw an error if there are any non .js files in the target directory', function() {
       var badFile = path.join(settingsPath, 'wrong-file.json')
-      assert.doesNotThrow(function() { fs.accessSync(badFile, fs.R_OK) })
+      assert.doesNotThrow(function() { fs.statSync(badFile) })
       assert.doesNotThrow(function() { configMe.loadDir(settingsPath) })
     })
 
