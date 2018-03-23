@@ -197,7 +197,7 @@ describe('ConfigMe', function() {
 
     it('throws an error if trying to load a non .js file', function() {
       var badFile = path.join(settingsPath, '..', 'wrong-file.json')
-      assert.doesNotThrow(function() { fs.accessSync(badFile, fs.R_OK) })
+      assert.doesNotThrow(function() { fs.statSync(badFile) })
       assert.throws(function() { configMe.loadFile(badFile) })
     })
 
