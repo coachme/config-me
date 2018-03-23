@@ -223,6 +223,12 @@ describe('ConfigMe', function() {
       configMe.loadFile(settingsPath)
       assert(Object.keys(configMe.settings).length > 0, 'Expected the "settings" object to have at least one key')
     })
+
+    it('returns the config object', function() {
+      var config = configMe.loadFile(settingsPath)
+      assert(typeof config !== 'undefined', 'Expected config to not be undefined')
+      assert.strictEqual(typeof config.get, 'function', 'Expected .get to be a function')
+    })
   })
 
   describe('.push()', function() {

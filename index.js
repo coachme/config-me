@@ -82,6 +82,8 @@ module.exports = {
     var name = camelCase(targetPath)
     var settings = require(targetPath)
     this.settings[name] = load(settings)
+
+    return this
   },
 
   push: function(setting) {
